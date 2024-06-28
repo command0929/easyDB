@@ -32,11 +32,32 @@ eval('testDB.getError();');
 
 > # How to use?
 
- > open
- 
- ```js
- let easyDB = require("easyDB");
- let testDB = easyDB.open("sdcard/test.db", {
-   create: true
- });
- ```
+```js
+let easyDB = require("easyDB");
+
+let testDB = easyDB.open("sdcard/test.db", {
+  create: true
+});
+
+testDB.reopen(); // 이전 설정으로 다시 열기
+let logs = testDB.get("chat_logs", {
+  key: "chat_id",
+  value: sbn.tag,
+  sort: "_id",
+}); // 해당 테이블의 값 가져오기
+
+testDB.put("test_table", {
+  key: "PRIMARY KEY",
+  data: "data1",
+  data2: "data2",
+}); // 값 넣기
+
+testDB.remove("test_table", {
+  key: "data",
+  value: "data1",
+  limit: 2,
+  sort: "_id",
+}); // 값 삭제
+
+testDB.close(); // 닫기
+```
