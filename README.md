@@ -31,3 +31,12 @@ eval('testDB.getError();');
 ```
 
 > # How to use?
+
+ > open
+ 
+ ```js
+ let easyDB = require("easyDB");
+ let testDB = easyDB.open("sdcard/test.db", {
+   create: true
+ });
+ ```
