@@ -34,7 +34,7 @@ function openDatabase (path, config) {
 function getModeAsConfig (config) {
    config = config || {};
    let read = config.read || true;
-   let write = config.read ? false : true;
+   let write = config.read ? ( config.write ? true : false ) : true;
    let create = config.create || false;
    if(create) return SQLiteDatabase.CREATE_IF_NECESSARY;
    if(write) return SQLiteDatabase.OPEN_READWRITE;
@@ -105,7 +105,7 @@ function setDatabase (File, OpenParams) {
     try{
         this.DB.execSQL('alter table '+ table_name + ' add column ' + column + ' longtext');
         }catch (err) {
-           /* Already exists key */
+           // Log.error(err + "\n" + err.stack);
         }
     }
 
@@ -115,8 +115,11 @@ function setDatabase (File, OpenParams) {
         if (cursor.moveToFirst()) {
             cursor.close();
             let contentValues = new ContentValues();
-            contentValues.put(key, value);
-            this.DB.update(table_name, contentValues, key + "=?", [value]);
+            for(let key of keys) {
+               let value = data[key];
+               contentValues.put(key, value);
+            }
+            this.DB.update(table_name, contentValues, data.key + "=?", [value]);
         } else {
             cursor.close();
             const content = makeContent(data);
@@ -146,6 +149,7 @@ function setDatabase (File, OpenParams) {
         else if([1, 2].some(e => e == key)) result[key] = Number(cursor.getString(idx));
         else if(type == 3) result[key] = cursor.getString(idx);
         else if(type == 4) result[key] = cursor.getBlob(idx);
+        else result[key] = cursor.getString(idx);
     }
     data.push(result);
     }
