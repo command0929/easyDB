@@ -1,4 +1,4 @@
-# easyDB module v0.1
+# easyDB module v0.2
 
 > # Description
 
